@@ -18,6 +18,12 @@ jobs:
         sudo apt update
         sudo apt install -y wget xz-utils build-essential file
 
+    - name: Debug tree
+      run: |
+        pwd
+        ls -lah
+        ls -lah scripts || true
+
     - name: Build firmware
       run: |
         chmod +x scripts/build.sh
