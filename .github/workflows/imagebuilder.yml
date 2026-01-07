@@ -1,0 +1,31 @@
+name: OpenWrt ImageBuilder TR3000
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y wget xz-utils build-essential file
+
+    - name: Build firmware
+      run: |
+        chmod +x scripts/build.sh
+        scripts/build.sh
+
+    - name: Upload firmware
+      uses: actions/upload-artifact@v4
+      with:
+        name: openwrt-tr3000-24.10.5
+        path: |
+          openwrt-imagebuilder-*/bin/targets/
