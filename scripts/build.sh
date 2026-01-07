@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 set -e
 
-OPENWRT_VERSION="24.10.5"
+OPENWRT_VERSION="v24.10.5"
 
 TARGET="mediatek"
 SUBTARGET="filogic"
 PROFILE="cudy_tr3000-v1"
 
-ARCH="aarch64_cortex-a53"
+ARCH="aarch64_cortex-a53_mediatek_filogic"
 
 AWG_REPO="Slava-Shchipunov/awg-openwrt"
 AWG_TAG="v${OPENWRT_VERSION}"
@@ -22,14 +22,13 @@ mkdir -p packages
 
 BASEURL="https://github.com/${AWG_REPO}/releases/download/${AWG_TAG}"
 
-for pkg in \
-  amneziawg-tools \
-  kmod-amneziawg \
-  luci-proto-amneziawg \
-  luci-i18n-amneziawg-ru
-do
+for pkg in amneziawg-tools kmod-amneziawg luci-proto-amneziawg luci-i18n-amneziawg-ru; do
   IPK="${pkg}_${OPENWRT_VERSION}_${ARCH}.ipk"
-  wget -q "${BASEURL}/${IPK}" -O "packages/${IPK}" || true
+  echo "Trying ${IPK}"
+  wget -q "${BASEURL}/${IPK}" -O "packages/${IPK}" || {
+    echo "WARNING: ${IPK} not found"
+    rm -f "packages/${IPK}"
+  }
 done
 
 make image \
